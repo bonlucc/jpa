@@ -1,6 +1,6 @@
 package com.jpatest.springjpa.service;
 
-import com.jpatest.springjpa.entity.User;
+import com.jpatest.springjpa.entity.AppUser;
 import com.jpatest.springjpa.entity.VerificationToken;
 import com.jpatest.springjpa.model.UserModel;
 import com.jpatest.springjpa.repository.UserRepository;
@@ -23,19 +23,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User registerUser (UserModel userModel){
-        User user = User.builder()
+    public AppUser registerUser (UserModel userModel){
+        AppUser appUser = AppUser.builder()
                 .firstName(userModel.getFirstName())
                 .lastName(userModel.getLastName())
                 .password(passwordEncoder.encode(userModel.getPassword()))
                 .email(userModel.getEmail())
                 .build();
-        return userRepository.save(user);
+        return userRepository.save(appUser);
     }
 
     @Override
-    public void saveVerificationTokenForUser(String token, User user) {
-        VerificationToken verificationToken = new VerificationToken(user,token);
+    public void saveVerificationTokenForUser(String token, AppUser appUser) {
+        VerificationToken verificationToken = new VerificationToken(appUser,token);
         verificationTokenRepository.save(verificationToken);
 
     }

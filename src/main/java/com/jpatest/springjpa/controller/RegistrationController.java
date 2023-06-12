@@ -1,6 +1,6 @@
 package com.jpatest.springjpa.controller;
 
-import com.jpatest.springjpa.entity.User;
+import com.jpatest.springjpa.entity.AppUser;
 import com.jpatest.springjpa.event.RegistrationCompleteEvent;
 import com.jpatest.springjpa.model.UserModel;
 import com.jpatest.springjpa.service.UserService;
@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/")
@@ -22,9 +24,13 @@ public class RegistrationController {
         this.publisher = publisher;
     }
     @PostMapping("/register")
-    public User registerUser(@RequestBody UserModel userModel){
-        User user = userService.registerUser(userModel);
-        publisher.publishEvent(new RegistrationCompleteEvent(user,"url"));
-        return user;
+    public AppUser registerUser(@RequestBody UserModel userModel, final HttpServletRequest request){
+        AppUser appUser = userService.registerUser(userModel);
+        publisher.publishEvent(new RegistrationCompleteEvent(appUser, applicationUrl(request)));
+        return appUser;
+    }
+
+    private String applicationUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 }

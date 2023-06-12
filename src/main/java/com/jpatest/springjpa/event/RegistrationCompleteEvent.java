@@ -1,6 +1,6 @@
 package com.jpatest.springjpa.event;
 
-import com.jpatest.springjpa.entity.User;
+import com.jpatest.springjpa.entity.AppUser;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
@@ -9,11 +9,11 @@ import org.springframework.context.ApplicationEvent;
 @Setter
 public class RegistrationCompleteEvent extends ApplicationEvent {
 
-    private User user;
+    private AppUser appUser;
     private String applicationUrl;
-    public RegistrationCompleteEvent(User user, String applicationUrl){
-        super(user);
-        this.user = user;
+    public RegistrationCompleteEvent(AppUser appUser, String applicationUrl){
+        super(appUser);
+        this.appUser = appUser;
         this.applicationUrl = applicationUrl;
     }
 

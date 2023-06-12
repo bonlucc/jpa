@@ -1,6 +1,5 @@
 package com.jpatest.springjpa.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,12 +28,12 @@ public class VerificationToken {
             nullable = false,
             foreignKey = @ForeignKey(name = "FK_USER_VERIFY_TOKEN")
     )
-    private User user;
+    private AppUser appUser;
 
-    public VerificationToken(User user, String token){
+    public VerificationToken(AppUser appUser, String token){
         super();
         this.token = token;
-        this.user = user;
+        this.appUser = appUser;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
     }
 
