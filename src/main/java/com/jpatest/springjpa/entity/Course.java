@@ -45,7 +45,9 @@ public class Course {
     )
     private Teacher teacher;
 
-    @ManyToMany
+    @ManyToMany(
+            cascade = CascadeType.ALL
+    )
     @JoinTable(
             name = "student_course_map",
             joinColumns = @JoinColumn(
@@ -59,7 +61,7 @@ public class Course {
     )
     private List<Student> students;
 
-    private void addStudents(Student student){
+    public void addStudents(Student student){
         if (students == null) students = new ArrayList<>();
         students.add(student);
     }

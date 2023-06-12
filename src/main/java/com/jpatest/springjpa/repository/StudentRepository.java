@@ -21,8 +21,8 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     Student getStudentByEmailAddressNativeNamedParam(
             @Param("email") String email);
 
-    @Modifying
-    @Transactional
+    @Modifying//outras operações modificantes
+    @Transactional//demarcar na camada de negócio... service
     @Query(
             value = "UPDATE tbl_student SET first_name = :firstName WHERE email_address = :email",
             nativeQuery = true

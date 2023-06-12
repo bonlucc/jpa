@@ -1,6 +1,7 @@
 package com.jpatest.springjpa.repository;
 
 import com.jpatest.springjpa.entity.Course;
+import com.jpatest.springjpa.entity.Student;
 import com.jpatest.springjpa.entity.Teacher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,15 +80,38 @@ class CourseRepositoryTest {
         System.out.println("courses = " + courses);
     }
 
-    /*
+
     @Test
     public void SaveCourseWithStudentAndTeacher(){
-
+        Teacher teacher = Teacher.builder()
+                .firstName("Morgan")
+                .lastName("Le Fae")
+                .build();
+        Student tristan = Student.builder()
+                .firstName("Tristan")
+                .lastName("Tam Lin")
+                .email("failnaught@camelot.com")
+                .build();
+        Student gawain = Student.builder()
+                .firstName("Gawain")
+                .lastName("Tam Lin")
+                .email("galantine@camelot.com")
+                .build();
+        Student lancelot = Student.builder()
+                .firstName("Lancelot")
+                .lastName("Tam Lin")
+                .email("arondight@camelot.com")
+                .build();
         Course course = Course.builder()
                 .title("AI")
                 .credit(12)
-                .teacher()
+                .teacher(teacher)
                 .build();
+
+        course.addStudents(tristan);
+        course.addStudents(gawain);
+        course.addStudents(lancelot);
+        courseRepository.save(course);
     }
-    */
+
 }
