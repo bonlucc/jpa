@@ -10,8 +10,8 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class VerificationToken {
-
+public class PasswordResetToken{
+  
     public static final int EXPIRATION_TIME = 10;
 
     @Id
@@ -26,18 +26,18 @@ public class VerificationToken {
     @JoinColumn(
             name = "user_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "FK_USER_VERIFY_TOKEN")
+            foreignKey = @ForeignKey(name = "FK_USER_PASSWORD_RESET_TOKEN")
     )
     private AppUser appUser;
 
-    public VerificationToken(AppUser appUser, String token){
+    public PasswordResetToken(AppUser appUser, String token){
         super();
         this.token = token;
         this.appUser = appUser;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
     }
 
-    public VerificationToken(String token){
+    public PasswordResetToken(String token){
         super();
         this.token = token;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
@@ -48,6 +48,7 @@ public class VerificationToken {
         calendar.setTimeInMillis(new Date().getTime());
         calendar.add(Calendar.MINUTE, expirationTime);
         return new Date(calendar.getTime().getTime());
+      
     }
 
 
