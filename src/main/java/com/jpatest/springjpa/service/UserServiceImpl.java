@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService{
       if(verificationToken == null) {
         return false;
       }
-      AppUser appUser = verificationToken.getUser();
+      AppUser appUser = verificationToken.getAppUser();
       Calendar cal = Calendar.getInstance();
       if((verificationToken.getExpirationTime().getTime() - cal.getTime().getTime()) <= 0){
         //verificationTokenRepository.delete(verificationToken);
@@ -69,14 +69,15 @@ public class UserServiceImpl implements UserService{
     public VerificationToken generateNewVerificationToken(String oldToken){
       VerificationToken verificationToken = verificationTokenRepository.findByToken(oldToken);
       verificationToken.setToken(UUID.randomUUID().toString());
-  verificationToken.setExpirationDate(VerificationToken.calculateExpirationDate(VerificationToken.EXPIRATION_TIME));
+  verificationToken.setExpirationTime(VerificationToken.calculateExpirationDate(VerificationToken.EXPIRATION_TIME));
       verificationTokenRepository.save(verificationToken);
       return verificationToken;
       
     }
 
-  @Override
-  public AppUser getUserByEmail(String email){
+
+    @Override
+  public AppUser findUserByEmail(String email){
     return userRepository.findByEmail(email);
   }
 

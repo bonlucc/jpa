@@ -51,7 +51,7 @@ public class RegistrationController {
     public String resendVerificationToken(@RequestParam("token") String oldToken, HttpServletRequest request){
       VerificationToken verificationToken = userService.generateNewVerificationToken(oldToken);
       //AppUser appUser = verificationToken.getAppUser();
-      resendVerificationTokenMail(verificationToken, applicationUrl(request)) //or use an event to send it
+      resendVerificationTokenMail(verificationToken, applicationUrl(request)); //or use an event to send it
       return "Verification Link Sent";
       
 
@@ -65,7 +65,7 @@ public class RegistrationController {
     private void resendVerificationTokenMail(VerificationToken verificationToken, String applicationUrl){
       String url = applicationUrl + "verifyRegistration?token=" + verificationToken.getToken();
       //sendVerificationEmail()
-      log.info("Click the link to verify your account: {}");
+      log.info("Click the link to verify your account: {}", url);
       
     }
     /*
@@ -81,14 +81,23 @@ public class RegistrationController {
   */
 
     @PostMapping("/resetPassword")
-    public String resetPassword (@RequestBody PasswordModel passwordModel){
+    public String resetPassword (@RequestBody PasswordModel passwordModel, HttpServletRequest request){
       AppUser appUser = userService.findUserByEmail(passwordModel.getEmail());
       if(appUser == null){
         return "";
       }
       String token = UUID.randomUUID().toString();
       userService.createPasswordResetTokenForUser(appUser, token);
-      
+      sendPasswordResetTokenMail(token, applicationUrl(request));
+      return "Email sent!";
     }
-  
+
+    private void sendPasswordResetTokenMail(String token, String applicationUrl) {
+        String url = applicationUrl + "passwordReset?token=" + token;
+        //sendEmail()
+        log.info("Click the link to verify the account: {}", url);
+    }
+
+    @GetMapping("/")
+
 }

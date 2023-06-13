@@ -12,10 +12,9 @@ public interface UserService {
     boolean validVerificationToken(String token);
 
     VerificationToken generateNewVerificationToken(String oldToken);
-  
-    AppUser getUserByEmail(String email);
 
     void createPasswordResetTokenForUser(AppUser appUser, String token);
 
-  
+
+    AppUser findUserByEmail(String email);
 }
