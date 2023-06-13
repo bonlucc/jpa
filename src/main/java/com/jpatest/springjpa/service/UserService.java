@@ -17,4 +17,6 @@ public interface UserService {
 
 
     AppUser findUserByEmail(String email);
+
+    boolean validPasswordResetToken(String token)
 }

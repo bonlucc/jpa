@@ -6,6 +6,7 @@ import com.jpatest.springjpa.event.RegistrationCompleteEvent;
 import com.jpatest.springjpa.model.PasswordModel;
 import com.jpatest.springjpa.model.UserModel;
 import com.jpatest.springjpa.service.UserService;
+import com.jpatest.springjpa.controller.AppController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +28,12 @@ import javax.servlet.http.HttpServletRequest;
 public class RegistrationController {
     private final UserService userService;
     private final ApplicationEventPublisher publisher;
+    private final AppController appController;
     @Autowired
-    public RegistrationController(UserService userService, ApplicationEventPublisher publisher){
+    public RegistrationController(UserService userService, ApplicationEventPublisher publisher, AppController appController){
         this.userService = userService;
         this.publisher = publisher;
+        this.appController = appController;
     }
     @PostMapping("/register")
     public AppUser registerUser(@RequestBody UserModel userModel, final HttpServletRequest request){
@@ -63,9 +66,9 @@ public class RegistrationController {
     }
   
     private void resendVerificationTokenMail(VerificationToken verificationToken, String applicationUrl){
-      String url = applicationUrl + "verifyRegistration?token=" + verificationToken.getToken();
-      //sendVerificationEmail()
-      log.info("Click the link to verify your account: {}", url);
+      String url = applicationUrl + "/verifyRegistration?token=" + verificationToken.getToken();
+      appController.sendHtmlEmail("Verification Email:", "Click the link to verify your account:" + url);
+      //log.info("Click the link to verify your account: {}", url);
       
     }
     /*
@@ -88,16 +91,24 @@ public class RegistrationController {
       }
       String token = UUID.randomUUID().toString();
       userService.createPasswordResetTokenForUser(appUser, token);
-      sendPasswordResetTokenMail(token, applicationUrl(request));
+      sendPasswordResetMail(token, applicationUrl(request));
       return "Email sent!";
     }
 
-    private void sendPasswordResetTokenMail(String token, String applicationUrl) {
-        String url = applicationUrl + "passwordReset?token=" + token;
-        //sendEmail()
-        log.info("Click the link to verify the account: {}", url);
+    private void sendPasswordResetMail(String token, String applicationUrl) {
+        String url = applicationUrl + "/verifyPasswordReset?token=" + token;
+        appController.sendHtmlEmail("Password Reset Email:", "Click the link to reset your password:" + url);
+        //log.info("Click the link to verify the account: {}", url);
     }
 
-    @GetMapping("/")
+    @GetMapping("/verifyPasswordReset")
+    public String verifyPasswordReset(@RequestParam("token") String token){
+      if(userService.validPasswordResetToken(token)){
+
+        //TO DO
+        return "User Verified";
+      }
+      return "Bad User";
+    }
 
 }

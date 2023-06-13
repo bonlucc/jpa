@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService{
     }
 
 
-    @Override
+  @Override
   public AppUser findUserByEmail(String email){
     return userRepository.findByEmail(email);
   }
@@ -86,4 +86,24 @@ public class UserServiceImpl implements UserService{
     PasswordResetToken passwordResetToken = new PasswordResetToken(appUser,token);
     passwordResetTokenRepository.save(passwordResetToken);
   }
+
+
+  @Override
+  public boolean validPasswordResetToken(String token){
+      PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+      if(passwordResetToken == null) {
+        return false;
+      }
+      AppUser appUser = passwordResetToken.getAppUser();
+      Calendar cal = Calendar.getInstance();
+      if((passwordResetToken.getExpirationTime().getTime() - cal.getTime().getTime()) <= 0){
+        //verificationTokenRepository.delete(verificationToken);
+        return false;
+      }
+      //TO DO
+      //appUser.setEnabled(true);
+      //userRepository.save(appUser);
+      return true;
+    
+    }
 }
