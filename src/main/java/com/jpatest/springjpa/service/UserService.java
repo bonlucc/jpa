@@ -15,8 +15,14 @@ public interface UserService {
 
     void createPasswordResetTokenForUser(AppUser appUser, String token);
 
+    AppUser findAppUserByEmail(String email);
 
-    AppUser findUserByEmail(String email);
+    boolean validPasswordResetToken(String token);
 
-    boolean validPasswordResetToken(String token)
+    Optional<AppUser> getAppUserByPasswordResetToken(String token);
+
+    void changePassword(AppUser appUser, String newPassword);
+
+    boolean passwordsMatch(String userPassword, String inputPassword);
+  
 }

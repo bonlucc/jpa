@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService{
 
 
   @Override
-  public AppUser findUserByEmail(String email){
+  public AppUser findAppUserByEmail(String email){
     return userRepository.findByEmail(email);
   }
 
@@ -106,4 +106,21 @@ public class UserServiceImpl implements UserService{
       return true;
     
     }
+
+  @Override
+  public Optional<AppUser> getUserByPasswordResetToken(String token){
+    return Optional.ofNullable(PasswordResetTokenRepository.findByToken(token).getAppUser());
+    
+  }
+
+  @Override
+  public void changePassword(AppUser appUser, String newPassword){
+    appUser.setPassword(passwordEncoder.encode(newPassword));
+    appUserRepository.save(appUser);
+  }
+
+  @Override
+  public boolean passwordsMatch(String userPassword, String inputPassword){
+    return passwordEncoder.matches(userPassword, inputPassword);
+  }
 }

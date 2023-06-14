@@ -12,10 +12,11 @@ public class WebSecurityConfig {
 
 
     private final String[] WHITE_LISTED_URLS = {
-        "/register",
-        "/resendVerifyToken",
+      "/register",
+      "/resendVerifyToken",
       "/resetPassword",
-        "verifyPasswordReset"
+      "/verifyPasswordReset",
+      "/changePassword"
     };
     @Bean
     public PasswordEncoder passwordEncoder(){

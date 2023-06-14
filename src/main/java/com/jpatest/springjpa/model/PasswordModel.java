@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PasswordModel {
-  String email;
+  private String email;
+  private String oldPassword;
+  private String newPassword;
   
 }

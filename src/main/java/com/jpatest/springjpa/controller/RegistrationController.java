@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RestController
 @RequestMapping("/")
+@Transactional
 public class RegistrationController {
     private final UserService userService;
     private final ApplicationEventPublisher publisher;
@@ -101,14 +102,29 @@ public class RegistrationController {
         //log.info("Click the link to verify the account: {}", url);
     }
 
-    @GetMapping("/verifyPasswordReset")
-    public String verifyPasswordReset(@RequestParam("token") String token){
-      if(userService.validPasswordResetToken(token)){
+    @PostMapping("/verifyPasswordReset")
+    public String verifyPasswordReset(@RequestParam("token") String token, @RequestBody PasswordModel passwordModel){
+      if(!userService.validPasswordResetToken(token)){
 
         //TO DO
-        return "User Verified";
+        return "Bad User";
       }
-      return "Bad User";
+      Optional<AppUser> appUserOpt =  userService.getUserByPasswordResetToken(token);
+      if(appUserOpt.isPresent()){
+        userService.changePassword(appUserOpt.get(), passwordModel.getNewPassword())
+      }
+      return "Password changed";
     }
 
+    @PostMapping("/changePassword")
+    public String changePassword(@RequestBody passwordModel passwordModel){
+      AppUser appUser = findAppUserByEmail(passwordModel.getEmail());
+      if(!userService.passwordsMatch(appUser.getPassword(), passwordModel.getOldPassword())){
+        return "Passwords don't match";
+      }
+       userService.changePassword(appUser, passwordModel.getNewPassword());
+       return "Passwords Changed";
+    }
+
+    @GetMapping("/user/registration")
 }
