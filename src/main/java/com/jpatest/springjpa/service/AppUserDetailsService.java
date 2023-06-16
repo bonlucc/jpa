@@ -1,13 +1,22 @@
 //article
-
+/*
 package com.jpatest.springjpa.service;
+
+import com.jpatest.springjpa.entity.AppUser;
+import com.jpatest.springjpa.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class AppUserDetailsService implements UserDetailsService{
-  private final AppUserRepository appUserRepository;
+public class AppUserDetailsService implements UserDetailsService {
+  private final UserRepository appUserRepository;
   @Autowired
-  public AppUserDetailsService(AppUserRepository appUserRepository){
+  public AppUserDetailsService(UserRepository appUserRepository){
     this.appUserRepository = appUserRepository;
   }
 
@@ -22,8 +31,8 @@ public class AppUserDetailsService implements UserDetailsService{
     boolean accountNonLocked = true;
 
     return new org.springframework.security.core.userdetails.User(
-          user.getEmail(), user.getPassword(), enabled, accountNonExpired,
-          credentialsNonExpired, accountNonLocked, getAuthorities(user.getRoles()));
+          appUser.getEmail(), appUser.getPassword(), enabled, accountNotExpired,
+          credentialsNonExpired, accountNonLocked, getAuthorities(appUser.getRoles()));
   }
 
   private static List<GrantedAuthority> getAuthorities (List<String> roles){
@@ -34,7 +43,7 @@ public class AppUserDetailsService implements UserDetailsService{
     return authorities;
   }
   //JAVA CONFIGURATION
-  /*
+
   @Autowired
 private MyUserDetailsService userDetailsService;
 
@@ -42,6 +51,6 @@ private MyUserDetailsService userDetailsService;
 protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(userDetailsService);
 }
-  */
+
   
-}
+}*/

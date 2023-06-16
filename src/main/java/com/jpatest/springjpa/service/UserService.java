@@ -4,6 +4,8 @@ import com.jpatest.springjpa.entity.AppUser;
 import com.jpatest.springjpa.entity.VerificationToken;
 import com.jpatest.springjpa.model.UserModel;
 
+import java.util.Optional;
+
 public interface UserService {
     AppUser registerUser(UserModel userModel);
 

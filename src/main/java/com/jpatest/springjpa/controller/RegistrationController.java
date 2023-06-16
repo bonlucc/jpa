@@ -9,6 +9,7 @@ import com.jpatest.springjpa.service.UserService;
 import com.jpatest.springjpa.controller.AppController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +54,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/resendVerifyToken")
-    public String resendVerificationToken(@RequestParam("token") String oldToken, HttpServletRequest request){
+    public String resendVerificationToken(@RequestParam("token") String oldToken, HttpServletRequest request) throws Exception {
       VerificationToken verificationToken = userService.generateNewVerificationToken(oldToken);
       //AppUser appUser = verificationToken.getAppUser();
       resendVerificationTokenMail(verificationToken, applicationUrl(request)); //or use an event to send it
@@ -66,7 +68,7 @@ public class RegistrationController {
 
     }
   
-    private void resendVerificationTokenMail(VerificationToken verificationToken, String applicationUrl){
+    private void resendVerificationTokenMail(VerificationToken verificationToken, String applicationUrl) throws Exception {
       String url = applicationUrl + "/verifyRegistration?token=" + verificationToken.getToken();
       appController.sendHtmlEmail("Verification Email:", "Click the link to verify your account:" + url);
       //log.info("Click the link to verify your account: {}", url);
@@ -85,8 +87,8 @@ public class RegistrationController {
   */
 
     @PostMapping("/resetPassword")
-    public String resetPassword (@RequestBody PasswordModel passwordModel, HttpServletRequest request){
-      AppUser appUser = userService.findUserByEmail(passwordModel.getEmail());
+    public String resetPassword (@RequestBody PasswordModel passwordModel, HttpServletRequest request) throws Exception {
+      AppUser appUser = userService.findAppUserByEmail(passwordModel.getEmail());
       if(appUser == null){
         return "";
       }
@@ -96,7 +98,7 @@ public class RegistrationController {
       return "Email sent!";
     }
 
-    private void sendPasswordResetMail(String token, String applicationUrl) {
+    private void sendPasswordResetMail(String token, String applicationUrl) throws Exception {
         String url = applicationUrl + "/verifyPasswordReset?token=" + token;
         appController.sendHtmlEmail("Password Reset Email:", "Click the link to reset your password:" + url);
         //log.info("Click the link to verify the account: {}", url);
@@ -109,16 +111,14 @@ public class RegistrationController {
         //TO DO
         return "Bad User";
       }
-      Optional<AppUser> appUserOpt =  userService.getUserByPasswordResetToken(token);
-      if(appUserOpt.isPresent()){
-        userService.changePassword(appUserOpt.get(), passwordModel.getNewPassword())
-      }
+      Optional<AppUser> appUserOpt =  userService.getAppUserByPasswordResetToken(token);
+        appUserOpt.ifPresent(appUser -> userService.changePassword(appUser, passwordModel.getNewPassword()));
       return "Password changed";
     }
 
     @PostMapping("/changePassword")
-    public String changePassword(@RequestBody passwordModel passwordModel){
-      AppUser appUser = findAppUserByEmail(passwordModel.getEmail());
+    public String changePassword(@RequestBody PasswordModel passwordModel){
+      AppUser appUser = userService.findAppUserByEmail(passwordModel.getEmail());
       if(!userService.passwordsMatch(appUser.getPassword(), passwordModel.getOldPassword())){
         return "Passwords don't match";
       }
@@ -126,5 +126,5 @@ public class RegistrationController {
        return "Passwords Changed";
     }
 
-    @GetMapping("/user/registration")
+    //@GetMapping("/user/registration")
 }

@@ -2,14 +2,25 @@ package com.jpatest.springjpa.controller;
 
 //import
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
+
 @Controller
   public class AppController {
     
-    private final JavaMailSender javaMailSender;
+    private final JavaMailSender mailSender;
 
     @Autowired
     public AppController(JavaMailSender javaMailSender){
-      this.javaMailSender = javaMailSender;
+      this.mailSender = javaMailSender;
     }
 
     public void sendPlainTextEmail(String head, String body) throws Exception{
@@ -21,7 +32,7 @@ package com.jpatest.springjpa.controller;
       message.setFrom(sender);
       message.setTo(recipient);
       message.setSubject(head);
-      message.setTest(body);
+      message.setText(body);
       
       mailSender.send(message);
     }
@@ -38,13 +49,13 @@ package com.jpatest.springjpa.controller;
       helper.setTo(recipient);
 
       boolean html = true;
-      helper.SetText(body, html);
+      helper.setText(body, html);
 
       mailSender.send(message);
       
     }
 
-    public void sendHtmlEmailWithAttachment(String head, String body, String attachmentPath, String fileName){
+    public void sendHtmlEmailWithAttachment(String head, String body, String attachmentPath, String fileName) throws MessagingException {
       String sender = "sender@gmail.com";
       String recipient = "recipient@gmail.com";
 
@@ -57,15 +68,15 @@ package com.jpatest.springjpa.controller;
       
 
       boolean html = true;
-      helper.SetText(body, html);
+      helper.setText(body, html);
 
       FileSystemResource file = new FileSystemResource(new File(attachmentPath));
-      helper.addAttachment(fileName, file)
+      helper.addAttachment(fileName, file);
 
       mailSender.send(message);
     }
 
-    public void sendHtmlEmailWithInlineImage(String head, String body, String imagePath, String imageName){
+    public void sendHtmlEmailWithInlineImage(String head, String body, String imagePath, String imageName) throws MessagingException {
        String sender = "sender@gmail.com";
       String recipient = "recipient@gmail.com";
 
@@ -78,7 +89,7 @@ package com.jpatest.springjpa.controller;
       
 
       boolean html = true;
-      helper.SetText(body, html);
+      helper.setText(body, html);
 
       FileSystemResource resource = new FileSystemResource(new File(imagePath));
 

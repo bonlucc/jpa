@@ -1,6 +1,7 @@
 package com.jpatest.springjpa.service;
 
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.jpatest.springjpa.entity.AppUser;
@@ -108,19 +109,20 @@ public class UserServiceImpl implements UserService{
     }
 
   @Override
-  public Optional<AppUser> getUserByPasswordResetToken(String token){
-    return Optional.ofNullable(PasswordResetTokenRepository.findByToken(token).getAppUser());
+  public Optional<AppUser> getAppUserByPasswordResetToken(String token){
+    return Optional.ofNullable(passwordResetTokenRepository.findByToken(token).getAppUser());
     
   }
 
   @Override
   public void changePassword(AppUser appUser, String newPassword){
     appUser.setPassword(passwordEncoder.encode(newPassword));
-    appUserRepository.save(appUser);
+    userRepository.save(appUser);
   }
 
   @Override
   public boolean passwordsMatch(String userPassword, String inputPassword){
     return passwordEncoder.matches(userPassword, inputPassword);
+
   }
 }

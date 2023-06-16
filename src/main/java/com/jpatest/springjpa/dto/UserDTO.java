@@ -1,3 +1,4 @@
+/*
 package com.jpatest.springjpa.dto;
 
 
@@ -23,4 +24,4 @@ public class UserDto {
     private String email;
     
     // standard getters and setters
-}
+}*/

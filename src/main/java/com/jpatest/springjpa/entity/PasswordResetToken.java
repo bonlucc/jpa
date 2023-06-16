@@ -24,7 +24,7 @@ public class PasswordResetToken{
             fetch = FetchType.EAGER
     )
     @JoinColumn(
-            name = "user_id",
+            name = "app_user_id",
             nullable = false,
             foreignKey = @ForeignKey(name = "FK_USER_PASSWORD_RESET_TOKEN")
     )
