@@ -32,11 +32,13 @@ public class Course {
     private Integer credit;
 
     @OneToOne(
+            fetch = FetchType.EAGER,
             mappedBy = "course"
     )
     private CourseMaterial courseMaterial;
 
     @ManyToOne(
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
     )
     @JoinColumn(
@@ -46,6 +48,7 @@ public class Course {
     private Teacher teacher;
 
     @ManyToMany(
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
     )
     @JoinTable(

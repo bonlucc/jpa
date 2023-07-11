@@ -1,6 +1,7 @@
 package com.jpatest.springjpa.controller;
 
 import com.jpatest.springjpa.entity.AppUser;
+import com.jpatest.springjpa.entity.Course;
 import com.jpatest.springjpa.entity.VerificationToken;
 import com.jpatest.springjpa.event.RegistrationCompleteEvent;
 import com.jpatest.springjpa.model.PasswordModel;
@@ -10,12 +11,7 @@ import com.jpatest.springjpa.controller.AppController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -125,6 +121,13 @@ public class RegistrationController {
        userService.changePassword(appUser, passwordModel.getNewPassword());
        return "Passwords Changed";
     }
+
+    @GetMapping("/mystring")
+    public AppUser myString(){
+        return AppUser.builder().firstName("Akasha").lastName("data").build();
+    }
+
+
 
     //@GetMapping("/user/registration")
 }
